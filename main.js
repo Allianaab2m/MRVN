@@ -60,8 +60,8 @@ client.on('message', async message => {
                     });
                     break;
                 default: 
-                message.reply('そのようなコマンドはありません。');
-                break;
+                    message.reply('そのようなコマンドはありません。');
+                    break;
             }
         }
     })
