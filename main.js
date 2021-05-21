@@ -69,10 +69,10 @@ client.once('ready', () => {
     systemLog.info('クライアント 準備完了');
 });
 
-client.on('guildMemberAdd', (user) => {
-    systemLog.info(`メンバー参加: ${user.name}, UUID: ${user.id}`);
+client.on('guildMemberAdd', (member) => {
+    systemLog.info(`メンバー参加: ${member.name}, UUID: ${user.id}`);
     client.channels.cache.get('752185115995537532').send(`
-    :rank_predator: <@${user.id}>さん、${client.guilds.cache.get('751692700113305612').name}}へようこそ! :rank_master:
+    :rank_predator: <@${member.id}>さん、${client.guilds.cache.get('751692700113305612').name}}へようこそ! :rank_master:
     <#752093558789505134> からルールを確認してください！
     `)
 })
