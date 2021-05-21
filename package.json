@@ -1,0 +1,24 @@
+{
+  "name": "mrvn",
+  "version": "0.1.1",
+  "description": "Bot for Apex Mobile Japan",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo 'No test command exist'",
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hiro527/MRVN.git"
+  },
+  "author": "Hiro",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Hiro527/MRVN/issues"
+  },
+  "homepage": "https://github.com/Hiro527/MRVN#readme",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "log4js": "^6.3.0"
+  }
+}
