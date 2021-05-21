@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const log4js = require('log4js');
-const settings = require('./lib/settings');
+const token = require('./DISCORD_TOKEN.json')
 const commands = require('./lib/commands'); // コマンド設定ファイル
 const package = require('./package.json');
 const config = require('./config.json'); // Discordクライアント用
@@ -43,7 +43,7 @@ const loggerInit = () => {
 loggerInit();
 const systemLog = log4js.getLogger('SYSTEM');
 
-client.login(settings.DISCORD_TOKEN).catch();
+client.login(token.token).catch();
 
 // イベントハンドラ
 client.on('message', async message => {
