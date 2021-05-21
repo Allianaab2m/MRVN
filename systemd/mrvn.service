@@ -1,0 +1,11 @@
+[Unit]
+Description=Discord BOT for Apex Mobile Japan Discord.
+
+[Service]
+Type=simple
+ExecStart=/MRVN/start.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

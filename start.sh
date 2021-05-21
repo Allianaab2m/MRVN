@@ -1,2 +1,3 @@
 #! /bin/bash
-npm start
+cd /MRVN
+npm run start
