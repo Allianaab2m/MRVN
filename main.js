@@ -43,7 +43,7 @@ const loggerInit = () => {
 loggerInit();
 const systemLog = log4js.getLogger('SYSTEM');
 
-client.login(settings.DISCORD_TOKEN);
+client.login(settings.DISCORD_TOKEN).catch();
 
 // イベントハンドラ
 client.on('message', async message => {
