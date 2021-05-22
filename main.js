@@ -8,6 +8,7 @@ const commands = require('./lib/commands');
 const config = require('./config.json');
 
 const client = new Discord.Client();
+let guild = null;
 
 const loggerInit = () => {
     log4js.configure({
@@ -63,6 +64,10 @@ client.on('message', async message => {
                         embed: commands.commands[k].embed,
                     });
                     break;
+                case 'exec':
+                    // ソースコード実行コマンド
+                    commands.commands[k].do(client, message, systemLog);
+                    break;
             }
         }
     });
@@ -84,4 +89,13 @@ client.once('ready', () => {
     systemLog.info(`MRVN v.${package.version} 起動完了`);
     systemLog.info(`ログイン成功: ${client.user.tag}(UUID:${client.user.id})`);
     client.user.setActivity(`m!help | v.${package.version}`);
+    guild = client.guilds.cache.get('751692700113305612');
+    setInterval(() => {
+        const entireMemberCount = client.channels.cache.get('845540229196021790');
+        const usersCount = client.channels.cache.get('845539306973298708');
+        const botCount = client.channels.cache.get('845540086152953887');
+        entireMemberCount.setName(`総メンバー数: ${guild.memberCount}`);
+        usersCount.setName(`ユーザー: ${guild.members.cache.filter(member => !member.user.bot).size}`);
+        botCount.setName(`BOT: ${guild.members.cache.filter(member => member.user.bot).size}`);
+    }, 1800);
 });
