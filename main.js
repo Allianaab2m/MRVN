@@ -7,6 +7,7 @@ const commands = require('./lib/commands');
 // Discordクライアント用
 const config = require('./config.json');
 
+const permissionLevel = ['メンバー', 'モデレーター', '管理者'];
 const client = new Discord.Client();
 let guild = null;
 
@@ -43,6 +44,10 @@ const loggerInit = () => {
     });
 };
 
+const permissionError = (message, required) => {
+    systemLog.error(`権限エラー: ${message.content}(必要: ${required}), ${message.author.tag}(UUID:${message.author.id}, 最高権限: ${message.member.roles.highest.name})`);
+};
+
 loggerInit();
 const systemLog = log4js.getLogger('SYSTEM');
 
@@ -50,6 +55,9 @@ client.login(token.token).catch();
 
 // イベントハンドラ
 client.on('message', async message => {
+    if (!message.content) return;
+    const userHighestRole = message.member.roles.highest.name;
+    const userPermission = permissionLevel.includes(userHighestRole) ? userHighestRole : 'メンバー';
     Object.keys(commands.commands).forEach((k) => {
         const tmp = config.prefix + k;
         if (tmp === message.content) {
@@ -66,7 +74,43 @@ client.on('message', async message => {
                     break;
                 case 'exec':
                     // ソースコード実行コマンド
-                    commands.commands[k].do(client, message, systemLog);
+                    switch (k) {
+                        case 'sfUpdate': {
+                            // サーバー情報の強制更新
+                            if (permissionLevel.indexOf(userPermission) >= permissionLevel.indexOf(commands.commands[k].permission)) {
+                                let embedData = {
+                                    color: 0x00ffff,
+                                    timestamp: new Date(),
+                                    description: `
+                                    サーバー情報の更新に成功しました。
+                                    `,
+                                };
+                                try {
+                                    const entireMemberCount = client.channels.cache.get('845540229196021790');
+                                    const usersCount = client.channels.cache.get('845539306973298708');
+                                    const botCount = client.channels.cache.get('845540086152953887');
+                                    entireMemberCount.setName(`総メンバー数: ${guild.memberCount}`);
+                                    usersCount.setName(`ユーザー: ${guild.members.cache.filter(member => !member.user.bot).size}`);
+                                    botCount.setName(`BOT: ${guild.members.cache.filter(member => member.user.bot).size}`);
+                                }
+                                catch (e) {
+                                    systemLog.error(e);
+                                    embedData = {
+                                        color: 0xff0000,
+                                        description: `
+                                        サーバー情報の更新に失敗しました。詳細はエラーログを確認してください。
+                                        `,
+                                    };
+                                }
+                                message.channel.send({ embed: embedData });
+                            }
+                            else {
+                                message.reply('あなたはこのコマンドを実行するのに必要な権限を持っていません。');
+                                permissionError(message, commands.commands[k].permission);
+                            }
+                            break;
+                        }
+                    }
                     break;
             }
         }
@@ -98,4 +142,8 @@ client.once('ready', () => {
         usersCount.setName(`ユーザー: ${guild.members.cache.filter(member => !member.user.bot).size}`);
         botCount.setName(`BOT: ${guild.members.cache.filter(member => member.user.bot).size}`);
     }, 10000);
+});
+
+process.on('exit', () => {
+    client.destroy();
 });
