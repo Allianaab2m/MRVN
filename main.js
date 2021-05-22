@@ -97,5 +97,5 @@ client.once('ready', () => {
         entireMemberCount.setName(`総メンバー数: ${guild.memberCount}`);
         usersCount.setName(`ユーザー: ${guild.members.cache.filter(member => !member.user.bot).size}`);
         botCount.setName(`BOT: ${guild.members.cache.filter(member => member.user.bot).size}`);
-    }, 1800);
+    }, 10000);
 });
