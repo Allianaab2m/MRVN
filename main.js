@@ -61,23 +61,23 @@ client.on('message', async message => {
     Object.keys(commands.commands).forEach((k) => {
         const tmp = config.prefix + k;
         if (tmp === message.content) {
-            switch (commands.commands[k].type) {
-                case 'text':
-                    // テキスト送信のみのコマンド
-                    message.channel.send(commands.commands[k].text);
-                    break;
-                case 'embed':
-                    // embed送信コマンド
-                    message.channel.send({
-                        embed: commands.commands[k].embed,
-                    });
-                    break;
-                case 'exec':
-                    // ソースコード実行コマンド
-                    switch (k) {
-                        case 'sfUpdate': {
-                            // サーバー情報の強制更新
-                            if (permissionLevel.indexOf(userPermission) >= permissionLevel.indexOf(commands.commands[k].permission)) {
+            if (permissionLevel.indexOf(userPermission) >= permissionLevel.indexOf(commands.commands[k].permission)) {
+                switch (commands.commands[k].type) {
+                    case 'text':
+                        // テキスト送信のみのコマンド
+                        message.channel.send(commands.commands[k].text);
+                        break;
+                    case 'embed':
+                        // embed送信コマンド
+                        message.channel.send({
+                            embed: commands.commands[k].embed,
+                        });
+                        break;
+                    case 'exec':
+                        // ソースコード実行コマンド
+                        switch (k) {
+                            case 'sfUpdate': {
+                                // サーバー情報の強制更新
                                 let embedData = {
                                     color: 0x00ffff,
                                     timestamp: new Date(),
@@ -103,15 +103,15 @@ client.on('message', async message => {
                                     };
                                 }
                                 message.channel.send({ embed: embedData });
+                                break;
                             }
-                            else {
-                                message.reply('あなたはこのコマンドを実行するのに必要な権限を持っていません。');
-                                permissionError(message, commands.commands[k].permission);
-                            }
-                            break;
                         }
-                    }
-                    break;
+                        break;
+                }
+            }
+            else {
+                message.reply('あなたはこのコマンドを実行するのに必要な権限を持っていません。');
+                permissionError(message, commands.commands[k].permission);
             }
         }
     });
