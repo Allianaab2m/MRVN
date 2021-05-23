@@ -90,7 +90,7 @@ client.on('message', async message => {
                                     const usersCount = client.channels.cache.get('845539306973298708');
                                     const botCount = client.channels.cache.get('845540086152953887');
                                     entireMemberCount.setName(`総メンバー数: ${guild.memberCount}`);
-                                    usersCount.setName(`ユーザー: ${guild.members.cache.filter(member => !member.user.bot).size}`);
+                                    usersCount.setName(`ユーザー: ${guild.memberCount - guild.members.cache.filter(member => member.user.bot).size}`);
                                     botCount.setName(`BOT: ${guild.members.cache.filter(member => member.user.bot).size}`);
                                 }
                                 catch (e) {
