@@ -1,6 +1,6 @@
 {
   "name": "mrvn",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Bot for Apex Mobile Japan",
   "main": "main.js",
   "scripts": {
