@@ -135,12 +135,15 @@ client.once('ready', () => {
     client.user.setActivity(`m!help | v.${package.version}`);
     guild = client.guilds.cache.get('751692700113305612');
     setInterval(() => {
-        const entireMemberCount = client.channels.cache.get('845540229196021790');
-        const usersCount = client.channels.cache.get('845539306973298708');
-        const botCount = client.channels.cache.get('845540086152953887');
-        entireMemberCount.setName(`総メンバー数: ${guild.memberCount}`);
-        usersCount.setName(`ユーザー: ${guild.members.cache.filter(member => !member.user.bot).size}`);
-        botCount.setName(`BOT: ${guild.members.cache.filter(member => member.user.bot).size}`);
+        const entireMemberCountCh = client.channels.cache.get('845540229196021790');
+        const usersCountCh = client.channels.cache.get('845539306973298708');
+        const botCountCh = client.channels.cache.get('845540086152953887');
+        const entireMemberCount = guild.memberCount;
+        const botCount = guild.members.cache.filter(member => member.user.bot).size;
+        const usersCount = entireMemberCount - botCount;
+        entireMemberCountCh.setName(`総メンバー数: ${entireMemberCount}`);
+        usersCountCh.setName(`ユーザー: ${usersCount}`);
+        botCountCh.setName(`BOT: ${botCount}`);
     }, 10000);
 });
 
