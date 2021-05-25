@@ -58,9 +58,11 @@ client.on('message', async message => {
     if (!message.content || !message.content.startsWith('m!') || message.author.bot) return;
     const userHighestRole = message.member.roles.highest.name;
     const userPermission = permissionLevel.includes(userHighestRole) ? userHighestRole : 'メンバー';
+    const cmd = message.content.split(' ')[0];
+    const args = message.content.split(' ').splice(0, 1);
     Object.keys(commands.commands).forEach((k) => {
         const tmp = config.prefix + k;
-        if (tmp === message.content) {
+        if (tmp === cmd) {
             if (permissionLevel.indexOf(userPermission) >= permissionLevel.indexOf(commands.commands[k].permission)) {
                 switch (commands.commands[k].type) {
                     case 'text':
@@ -75,40 +77,7 @@ client.on('message', async message => {
                         break;
                     case 'exec':
                         // ソースコード実行コマンド
-                        switch (k) {
-                            case 'sfUpdate': {
-                                // サーバー情報の強制更新
-                                let embedData = {
-                                    color: 0x00ffff,
-                                    timestamp: new Date(),
-                                    description: `
-                                    サーバー情報の更新に成功しました。
-                                    `,
-                                };
-                                try {
-                                    const entireMemberCountCh = client.channels.cache.get('845540229196021790');
-                                    const usersCountCh = client.channels.cache.get('845539306973298708');
-                                    const botCountCh = client.channels.cache.get('845540086152953887');
-                                    const entireMemberCount = guild.memberCount;
-                                    const botCount = guild.members.cache.filter(member => member.user.bot).size;
-                                    const usersCount = entireMemberCount - botCount;
-                                    entireMemberCountCh.setName(`総メンバー数: ${entireMemberCount}`);
-                                    usersCountCh.setName(`ユーザー: ${usersCount}`);
-                                    botCountCh.setName(`BOT: ${botCount}`);
-                                }
-                                catch (e) {
-                                    systemLog.error(e);
-                                    embedData = {
-                                        color: 0xff0000,
-                                        description: `
-                                        サーバー情報の更新に失敗しました。詳細はエラーログを確認してください。
-                                        `,
-                                    };
-                                }
-                                message.channel.send({ embed: embedData });
-                                break;
-                            }
-                        }
+                        commands.commands[k].execute(client, message, systemLog, args);
                         break;
                 }
             }
