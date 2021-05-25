@@ -59,7 +59,7 @@ client.on('message', async message => {
     const userHighestRole = message.member.roles.highest.name;
     const userPermission = permissionLevel.includes(userHighestRole) ? userHighestRole : 'メンバー';
     const cmd = message.content.split(' ')[0];
-    const args = message.content.split(' ').splice(0, 1);
+    const args = message.content.split(' ').splice(1);
     Object.keys(commands.commands).forEach((k) => {
         const tmp = config.prefix + k;
         if (tmp === cmd) {
